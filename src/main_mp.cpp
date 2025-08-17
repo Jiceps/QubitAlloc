@@ -11,10 +11,10 @@ namespace mpi = boost::mpi;
 // ARGUMENTS:
 // argv[1] = interaction matrix path
 // argv[2] = distance matrix path
-// argv[3] = it_max                     (optional, default: 5)
+// argv[3] = it_max                     (optional, default: 10)
 
 // example execution command: (2 nodes, 9 proc per node, 4 threads per proc)
-// mpirun -machinefile \$OAR_NODEFILE -np 18 --map-by ppr:9:node:pe=2 -x OMP_NUM_THREADS=4 ./qapbb_mp inter/rd_14.csv dist/20_boeblingen.csv 3
+// mpirun -machinefile \$OAR_NODEFILE -np 18 --map-by ppr:9:node:pe=2 -x OMP_NUM_THREADS=4 ./qapbb_mp inter/rd_14.csv dist/20_boeblingen.csv 15
 
 int main (int argc, char** argv)
 {
@@ -46,7 +46,7 @@ int main (int argc, char** argv)
     //----------------------------------- Variables -----------------------------------//
 
     // parameter
-    int it_max = 5;
+    int it_max = 10;
 
     // initialization variables
     vector<vector<int>> D, F;

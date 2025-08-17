@@ -11,7 +11,7 @@ namespace mpi = boost::mpi;
 // ARGUMENTS:
 // argv[1] = interaction matrix path
 // argv[2] = distance matrix path
-// argv[3] = it_max                           (optional, default: 5)
+// argv[3] = it_max                     (optional, default: 10)
 
 
 int main (int argc, char** argv)
@@ -42,7 +42,7 @@ int main (int argc, char** argv)
     //----------------------------------- Variables -----------------------------------//
 
     // parameter
-    int it_max = 5;
+    int it_max = 10;
 
     // initialization variables
     vector<vector<int>> D, F;

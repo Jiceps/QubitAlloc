@@ -69,10 +69,15 @@ int main (int argc, char** argv)
     // prioritization queue of logical qubits
     vector<int> priority = Prioritization(F, n, m);
 
+    std::cout << priority << std::endl;
+
 
     // greedy heuristic allocation
     vector<int> map0;
     int min_cost = GreedyAllocation(D, F, priority, n, m, map0);
+
+    std::cout << "\ngreedy = " << map0 << std::endl;
+    std::cout << "cost = " << min_cost << std::endl;
 
 
     // variables
@@ -89,6 +94,15 @@ int main (int argc, char** argv)
 
     stack<Node> Pool;
     Pool.push(Node::Root(D, F, n, m));
+
+    // TEST //
+    /*
+    std::cout << F << std::endl;
+    std::cout << D << std::endl;
+    Node root0 = Node::Root(D, F, n, m);
+    std::cout << root0.get_costMatrix() << std::endl;
+    */
+    /////////
 
     while (!Pool.empty())
     {
