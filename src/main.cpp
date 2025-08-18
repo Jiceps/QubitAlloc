@@ -55,8 +55,7 @@ int main (int argc, char** argv)
     if (bound_par)
         std::cout << "number of threads = " << omp_get_max_threads() << std::endl;
 
-
-    // profiling variable
+    // profiling variables
     double rt, rt_bound{0};
 
 
@@ -64,21 +63,18 @@ int main (int argc, char** argv)
 
     // START TIMER //
     auto begin = std::chrono::high_resolution_clock::now();
-
-
+    
     // prioritization queue of logical qubits
     vector<int> priority = Prioritization(F, n, m);
-
-    std::cout << priority << std::endl;
-
 
     // greedy heuristic allocation
     vector<int> map0;
     int min_cost = GreedyAllocation(D, F, priority, n, m, map0);
 
-    std::cout << "\ngreedy = " << map0 << std::endl;
-    std::cout << "cost = " << min_cost << std::endl;
-
+    // TEST //
+    //std::cout << "\ngreedy = " << map0 << std::endl;
+    //std::cout << "cost = " << min_cost << std::endl;
+    //////////
 
     // variables
     vector<vector<int>> optimal_solutions;
@@ -102,7 +98,7 @@ int main (int argc, char** argv)
     Node root0 = Node::Root(D, F, n, m);
     std::cout << root0.get_costMatrix() << std::endl;
     */
-    /////////
+    //////////
 
     while (!Pool.empty())
     {
@@ -168,20 +164,17 @@ int main (int argc, char** argv)
     std::chrono::duration<double> duration = end - begin;
     rt = duration.count();
 
-
     // results display
     std::cout << "number of solutions = " << optimal_solutions.size() << "\n";
 
     assert(ValidSolutions(optimal_solutions, D, F, n, min_cost) && "Error: Invalid set of optimal solutions");
     std::cout << "cost = " << min_cost << std::endl;
 
-
     // visited nodes & meain bounding iterations display
     const double nb_nodes_total = ComputeTotalNumberOfNodes(n, m);
     std::cout << "\ntotal number of nodes = " << nb_nodes_total << "\n";
     std::cout << "number of visited nodes = " << nb_nodes_visited << "\n";
     std::cout << "bounding mean iter = " << bound_iter_sum / nb_nodes_bounded << std::endl;
-
 
     // runtime 
     std::cout << "\nruntime = " << rt << " s\n" << std::endl;

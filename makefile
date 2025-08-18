@@ -22,6 +22,8 @@ else
     EXEC_EXT =
 endif
 
+EXEC_FILES = $(addsuffix $(EXEC_EXT),$(EXEC))
+
 all: $(EXEC)
 
 ## executables
@@ -76,4 +78,4 @@ clean:
 	$(RM) *.o
 
 fclean: clean
-	$(RM) $(EXEC)$(EXEC_EXT)
+	$(RM) $(EXEC_FILES)

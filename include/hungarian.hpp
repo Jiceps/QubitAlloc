@@ -3,6 +3,6 @@
 
     #include "utils.hpp"
 
-    int Hungarian (int* C, int i0, int j0, int n, bool disallow);
+    int Hungarian (int* C, int i0, int j0, int n);
 
 #endif

@@ -18,26 +18,14 @@ bool ckmin(int &a, const int &b)
  *          of assigning the w-th worker to the j-th job (possibly negative).
  * @param i0 row index of the cost sub-matrix C
  * @param j0 column index of the cost sub-matrix C
+ * @param n size of the input cost matrix C
  * @return The minimum assignment cost.
  */
-int Hungarian (int* C, int i0, int j0, int n, bool disallow)
+int Hungarian (int* C, int i0, int j0, int n)
 {
     int w, j, w_cur, j_cur, j_next;
 
     const int inf = INF / 2;
-
-    // mark disallowed elements with a very large cost
-    /*if (disallow)
-    {
-        for (w = 0; w < n; ++w)
-        {
-            for (j = 0; j < n; ++j)
-            {
-                if ((w == i0) ^ (j == j0))
-                    C[idx4D(i0, j0, w, j, n)] = inf;
-            }
-        }
-    }*/
 
     // job[j] = worker assigned to job j, or -1 if unassigned
     vector<int> job(n + 1, -1);
@@ -68,8 +56,7 @@ int Hungarian (int* C, int i0, int j0, int n, bool disallow)
                 if (!in_Z[j])
                 {
                     // reduced cost = C[w][j] - yw[w] - yj[j]
-                    //int cur_cost = C[idx4D(i0, j0, w, j, n)] - yw[w] - yj[j];
-                    int cur_cost = C[w*n + j] - yw[w] - yj[j];
+                    int cur_cost = C[idx4D(i0, j0, w, j, n)] - yw[w] - yj[j];
 
                     if (ckmin(min_to[j], cur_cost))
                         prv[j] = j_cur;
@@ -110,8 +97,7 @@ int Hungarian (int* C, int i0, int j0, int n, bool disallow)
     for (j = 0; j < n; ++j)
     {
         if (job[j] != -1)
-            //total_cost += C[idx4D(i0, j0, job[j], j, n)];
-            total_cost += C[job[j]*n + j];
+            total_cost += C[idx4D(i0, j0, job[j], j, n)];
     }
 
     // OPTIONAL: Reflecting the "reduced costs" after the Hungarian
@@ -120,13 +106,11 @@ int Hungarian (int* C, int i0, int j0, int n, bool disallow)
     {
         for (j = 0; j < n; ++j)
         {
-            //if (C[idx4D(i0, j0, w, j, n)] < inf)
-            //{
+            if (C[idx4D(i0, j0, w, j, n)] < inf)
+            {
                 // subtract the final potentials from the original cost
-                //C[idx4D(i0, j0, w, j, n)] = C[idx4D(i0, j0, w, j, n)] - yw[w] - yj[j];
-            //}
-            if (C[w*n + j] < inf)
-                C[w*n + j] -= yw[w] + yj[j];
+                C[idx4D(i0, j0, w, j, n)] = C[idx4D(i0, j0, w, j, n)] - yw[w] - yj[j];
+            }
         }
     }
 

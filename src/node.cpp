@@ -45,7 +45,6 @@ int Node::bound (int it_max, int min_cost, int& it, bool early_stop, double& rt)
 
     int i, j;
     int cost, incre, idx_submat;
-    int m2 = m*m;
 
     it = 0;
 
@@ -64,14 +63,14 @@ int Node::bound (int it_max, int min_cost, int& it, bool early_stop, double& rt)
             {
                 idx_submat = i*m + j;
 
-                cost = Hungarian(C.data() + idx_submat*m2, i, j, m, true);
+                cost = Hungarian(C.data(), i, j, m);
 
                 L[idx_submat] += cost;
             }
         }
 
         // apply Hungarian algorithm to the leader matrix
-        incre = Hungarian(L.data(), 0, 0, m, false);
+        incre = Hungarian(L.data(), 0, 0, m);
 
         if (early_stop && incre == 0)
             break;
@@ -124,13 +123,13 @@ int Node::bound_OMP (int it_max, int min_cost, int& it, bool early_stop, double&
             {
                 idx_submat = i*m + j;
 
-                cost = Hungarian(C.data() + idx_submat*m2, i, j, m, true);
+                cost = Hungarian(C.data(), i, j, m);
 
                 L[idx_submat] += cost;
             }
         }
 
-        incre = Hungarian(L.data(), 0, 0, m, false);
+        incre = Hungarian(L.data(), 0, 0, m);
 
         if (early_stop && incre == 0)
             break;
