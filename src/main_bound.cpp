@@ -39,7 +39,7 @@ int main()
     vector<int> map(n, -1);
     sol.mapping = map;
     sol.cost = -1;
-    vector<int> available = Arange(m);
+    vector<bool> available(m, true);
     CostMatrix CM = CostMatrix::Assemble(D, F, m);
 
     Node root_seq = Node{sol, 0, 0, CM, available};

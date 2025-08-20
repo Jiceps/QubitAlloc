@@ -8,7 +8,7 @@ Node Node::Root (const vector<vector<int>>& D, const vector<vector<int>>& F, int
     vector<int> map(n, -1);
     sol.mapping = map;
     sol.cost = -1;
-    vector<int> available = Arange(m);
+    vector<bool> available(m, true);
     CostMatrix CM = CostMatrix::Assemble(D, F, m);
 
     return Node{sol, 0, 0, CM, available};
@@ -150,25 +150,29 @@ vector<Node> Node::decompose (const vector<int>& priority, int n, int m, int min
     vector<Node> children;
 
     Solution& sol = this->solution;
-    //vector<int>& sol = this->solution;
     const int sz = this->size;
     const int lb = this->lower_bound;
     const CostMatrix& CM = this->costMatrix;
-    vector<int>& av = this->available;
+    vector<bool>& av = this->available;
 
     // next logical qubit q_i to assign
     int i = priority[sz];
 
-    for (int l = (m - sz - 1); l >= 0; --l)
-    {
-        // next available physical qubit
-        int j = av[l];
+    // local index of q_i in the cost matrix
+    int k = getLocalIndex(sol.mapping, i);
 
-        // local index of q_i in the cost matrix
-        int k = getLocalIndex(sol.mapping, i);
+    // iterate over available physical qubits
+    for (int j = m - 1; j >= 0; --j)
+    {
+        if (!av[j]) continue; // skip if not available
+
+        // local index of P_j in the cost matrix
+        int l = 0;
+        for (int t = 0; t < j; ++t)
+            if (av[t]) ++l;
 
         // increment lower bound
-        int incre = CM.get_leader()[k*(m - sz) + l];
+        int incre = CM.get_leader()[k * (m - sz) + l];
         int lb_new = lb + incre;
 
         // prune
@@ -179,7 +183,7 @@ vector<Node> Node::decompose (const vector<int>& priority, int n, int m, int min
 
         // assign q_i to P_j
         sol.mapping[i] = j;
-        av.erase(av.begin() + l);
+        av[j] = false;
 
         // reduce cost matrix according to the new sub-problem
         CostMatrix CM_new = CM.reduce(k, l);
@@ -189,7 +193,7 @@ vector<Node> Node::decompose (const vector<int>& priority, int n, int m, int min
 
         // restore data
         sol.mapping[i] = -1;
-        av.insert(av.begin() + l, j);
+        av[j] = true;
     }
 
     return children;

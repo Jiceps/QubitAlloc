@@ -26,7 +26,7 @@
             int size;
             int lower_bound;
             CostMatrix costMatrix;
-            vector<int> available;
+            vector<bool> available;
 
         public:
 
@@ -34,11 +34,11 @@
 
             ~ Node () = default;
 
-            Node (Solution solution0, int size0, int lower_bound0, CostMatrix& costMatrix0, vector<int> available0) : solution(solution0),
-                                                                                                                      size(size0),
-                                                                                                                      lower_bound(lower_bound0),
-                                                                                                                      costMatrix(costMatrix0),
-                                                                                                                      available(available0) {}
+            Node (Solution solution0, int size0, int lower_bound0, CostMatrix& costMatrix0, vector<bool> available0) : solution(solution0),
+                                                                                                                       size(size0),
+                                                                                                                       lower_bound(lower_bound0),
+                                                                                                                       costMatrix(costMatrix0),
+                                                                                                                       available(available0) {}
 
             const Solution& get_solution () const { return solution; }
             Solution& get_solution () { return solution; }
@@ -46,8 +46,8 @@
             int get_lowerBound () const { return lower_bound; }
             const CostMatrix& get_costMatrix () const { return costMatrix; }
             CostMatrix& get_costMatrix () { return costMatrix; }
-            const vector<int>& get_availablePq () const { return available; }
-            vector<int>& get_availablePq () { return available; }
+            const vector<bool>& get_available () const { return available; }
+            vector<bool>& get_available () { return available; }
 
             bool isLeaf (int n) const { return n == size; }
 
