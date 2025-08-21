@@ -15,7 +15,7 @@ Node Node::Root (const vector<vector<int>>& D, const vector<vector<int>>& F, int
 }
 
 
-int getLocalIndex (const vector<int>& mapping, int i)
+int localLogicalQubitIndex (const vector<int>& mapping, int i)
 {
     int j{0}, k{0};
 
@@ -26,6 +26,19 @@ int getLocalIndex (const vector<int>& mapping, int i)
     }
 
     return k;
+}
+
+int localPhysicalQubitIndex (const vector<bool>& av, int j)
+{
+    int l{0};
+
+    for (int i = 0; i < j; ++i)
+    {
+        if (av[i])
+        ++l;
+    }
+
+    return l;
 }
 
 
@@ -159,7 +172,7 @@ vector<Node> Node::decompose (const vector<int>& priority, int n, int m, int min
     int i = priority[sz];
 
     // local index of q_i in the cost matrix
-    int k = getLocalIndex(sol.mapping, i);
+    int k = localLogicalQubitIndex(sol.mapping, i);
 
     // iterate over available physical qubits
     for (int j = m - 1; j >= 0; --j)
@@ -167,10 +180,8 @@ vector<Node> Node::decompose (const vector<int>& priority, int n, int m, int min
         if (!av[j]) continue; // skip if not available
 
         // local index of P_j in the cost matrix
-        int l = 0;
-        for (int t = 0; t < j; ++t)
-            if (av[t]) ++l;
-
+        int l = localPhysicalQubitIndex(av, j);
+        
         // increment lower bound
         int incre = CM.get_leader()[k * (m - sz) + l];
         int lb_new = lb + incre;
