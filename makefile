@@ -1,17 +1,13 @@
 CC = g++
-MPICC = mpic++
 
 CPP_VER = -std=c++17
 CFLAG = -Wall -c
 OFLAG = -O3
-OMP = -fopenmp
-
-BOOST = -lboost_mpi -lboost_serialization
 
 SRC_DIR = src
 INC_DIR = include
 
-EXEC = qabb qapbb_sp qapbb_mp bound
+EXEC = qabb
 
 # OS detection
 ifeq ($(OS), Windows_NT) 
@@ -26,49 +22,28 @@ EXEC_FILES = $(addsuffix $(EXEC_EXT),$(EXEC))
 
 all: $(EXEC)
 
-## executables
-qabb: main.o node.o matrices.o heuristics.o hungarian.o objective.o utils.o
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $^ -o $@
-
-qapbb_sp: main_sp.o node.o matrices.o heuristics.o hungarian.o objective.o utils.o
-	$(MPICC) $(CPP_VER) $(OFLAG) $(OMP) $^ -o $@ $(BOOST)
-
-qapbb_mp: main_mp.o node.o matrices.o heuristics.o hungarian.o objective.o utils.o
-	$(MPICC) $(CPP_VER) $(OFLAG) $(OMP) $^ -o $@ $(BOOST)
-
-bound: main_bound.o node.o matrices.o heuristics.o hungarian.o objective.o utils.o
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $^ -o $@
+## executable
+qabb: main.o node.o preprocessing.o hungarian.o objective.o utils.o
+	$(CC) $(CPP_VER) $(OFLAG) $^ -o $@
 
 ## objects
 main.o: $(SRC_DIR)/main.cpp $(INC_DIR)/*.hpp
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $<
-
-main_sp.o: $(SRC_DIR)/main_sp.cpp $(INC_DIR)/*.hpp
-	$(MPICC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $< $(BOOST)
-
-main_mp.o: $(SRC_DIR)/main_mp.cpp $(INC_DIR)/*.hpp
-	$(MPICC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $< $(BOOST)
-
-main_bound.o: $(SRC_DIR)/main_bound.cpp $(INC_DIR)/*.hpp
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $<
+	$(CC) $(CPP_VER) $(OFLAG) $(CFLAG) $<
 
 node.o: $(SRC_DIR)/node.cpp $(INC_DIR)/*.hpp
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $< $(BOOST)
+	$(CC) $(CPP_VER) $(OFLAG) $(CFLAG) $<
 
-matrices.o: $(SRC_DIR)/matrices.cpp $(INC_DIR)/*.hpp
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $< $(BOOST)
-
-heuristics.o: $(SRC_DIR)/heuristics.cpp $(INC_DIR)/*.hpp
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $<
+preprocessing.o: $(SRC_DIR)/preprocessing.cpp $(INC_DIR)/*.hpp
+	$(CC) $(CPP_VER) $(OFLAG) $(CFLAG) $<
 
 objective.o: $(SRC_DIR)/objective.cpp $(INC_DIR)/*.hpp
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $<
+	$(CC) $(CPP_VER) $(OFLAG) $(CFLAG) $<
 
 hungarian.o: $(SRC_DIR)/hungarian.cpp $(INC_DIR)/*.hpp
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $<
+	$(CC) $(CPP_VER) $(OFLAG) $(CFLAG) $<
 
 utils.o: $(SRC_DIR)/utils.cpp $(INC_DIR)/utils.hpp
-	$(CC) $(CPP_VER) $(OFLAG) $(OMP) $(CFLAG) $<
+	$(CC) $(CPP_VER) $(OFLAG) $(CFLAG) $<
 
 
 ## clean

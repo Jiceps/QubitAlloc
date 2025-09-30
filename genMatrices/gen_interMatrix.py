@@ -4,7 +4,9 @@ import numpy as np
 
 
 ## Benchmark circuit names
-Benchmarks = ["10_sqn",
+'''
+Benchmarks = ["10_qft",
+              "10_sqn",
               "10_sym9",
               "11_sym9",
               "11_wim",
@@ -23,7 +25,45 @@ Benchmarks = ["10_sqn",
               "15_sqrt7",
               "16_inc",
               "16_ising",
-              "16_mlp4"]
+              "16_mlp4",
+              "rd_11",
+              "rd_12",
+              "rd_13",
+              "rd_14",
+              "rd_15",
+              "rd_16",
+              "rd_17",
+              "rd_18",
+              "rd_19",
+              "rd_20",
+              "rd_21",
+              "rd_22",
+              "rd_23",
+              "rd_24",
+              "rd_25",
+              "rd_26",
+              "rd_27"]
+'''
+
+# TEST
+Benchmarks = ["16_alu2",
+              "17_5xp1",
+              "17_ryy6",
+              "18_alu3",
+              "18_sqrt6",
+              "19_add6",
+              "20_cmb",
+              "20_ex1010",
+              "21_decod",
+              "21_dk17",
+              "22_apla",
+              "22_cm105a",
+              "23_63mod4096",
+              "24_arb8",
+              "25_cu",
+              "25_rd73",
+              "26_in0",
+              "27_sym9"]
 
 
 def InteractionMatrix (qasm_file_path):
@@ -60,7 +100,9 @@ for bench in Benchmarks:
 
     input_file_path = "../circuits/" + bench + ".qasm"
 
-    output_file_path = "../inter/" + bench + ".csv"
+    #output_file_path = "../inter/" + bench + ".csv"
+    #output_file_path = "../inter/MQT/" + bench + ".csv"
+    output_file_path = "../inter/test/" + bench + ".csv"
 
     SaveMatrix_csv(InteractionMatrix(input_file_path), output_file_path)
 

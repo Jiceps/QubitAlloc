@@ -12,7 +12,7 @@
     #include <fstream>
     #include <string>
     #include <sstream>
-    #include <omp.h>
+    #include <cmath>
 
     using namespace std;
 

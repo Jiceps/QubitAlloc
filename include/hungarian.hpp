@@ -3,6 +3,6 @@
 
     #include "utils.hpp"
 
-    int Hungarian (int* C, int i0, int j0, int n);
+    int Hungarian (const vector<int>& L, int n);
 
 #endif

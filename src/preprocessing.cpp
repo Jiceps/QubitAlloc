@@ -1,4 +1,126 @@
-#include "../include/heuristics.hpp"
+#include "../include/preprocessing.hpp"
+
+
+int Load_distanceMatrix (vector<vector<int>>& D, const std::string& file_path)
+{
+    std::ifstream file;
+    file.open(file_path, std::ios::in);
+
+    if (!file.is_open())
+    {
+        cerr << "Error opening file: " << file_path << endl;
+        exit(1);
+    }
+
+    std::string line;
+    int m = 0;
+
+    // read the first line to get the input matrix size (physical qubits)
+    if (getline(file, line))
+    {
+        istringstream iss(line);
+        iss >> m;
+    }
+
+    D.assign(m, vector<int>(m, 0));
+
+    // skip the second line
+    getline(file, line);
+    
+    // read data
+    int row{0}, col{0};
+    while (getline(file, line))
+    {
+        std::istringstream iss(line);
+
+        int value;
+
+        while (iss >> value && col < m)
+        {
+            D[row][col] = value;
+            ++col;
+        }
+        ++row;
+
+        col = 0;
+    }
+
+    file.close();
+
+    return m;
+}
+
+
+int Load_interactionMatrix (vector<vector<int>>& F, const std::string& file_path, int m)
+{
+    F.assign(m, vector<int>(m, 0));
+
+    std::ifstream file;
+    file.open(file_path, std::ios::in);
+
+    if (!file.is_open())
+    {
+        cerr << "Error opening file: " << file_path << endl;
+        exit(1);
+    }
+
+    std::string line;
+    int n = 0;
+
+    // read the first line to get the input matrix size (logical qubits)
+    if (getline(file, line))
+    {
+        istringstream iss(line);
+        iss >> n;
+    }
+
+    // assertion
+    assert(n <= m && "Error: There must be at least as many physical qubits as logical qubits.");
+
+    // skip the second line
+    getline(file, line);
+    
+    // read data
+    int row{0}, col{0};
+    while (getline(file, line) && row < m)
+    {
+        std::istringstream iss(line);
+
+        int value;
+
+        while (iss >> value && col < m)
+        {
+            F[row][col] = value;
+            ++col;
+        }
+        ++row;
+
+        col = 0;
+    }
+
+    file.close();
+
+    return n;
+}
+
+
+vector<vector<int>> LinearCouplingDistanceMatrix (int n)
+{
+    vector<vector<int>> D(n, vector<int>(n, 0));
+
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < n; ++j)
+        {
+            if (i != j)
+            {
+                D[i][j] = abs(i - j) - 1;
+            }
+        }
+    }
+
+    return D;
+}
 
 
 vector<int> RowwiseSum (const vector<vector<int>>& F, const int m)
@@ -106,7 +228,7 @@ int GreedyAllocation (const vector<vector<int>>& D, const vector<vector<int>>& F
             available[l_min] = false;
         }
 
-        route_cost_temp = ObjectiveFunction(alloc_temp, D, F, n);
+        route_cost_temp = Objective(alloc_temp, D, F, n);
 
         if (route_cost_temp < route_cost)
         {

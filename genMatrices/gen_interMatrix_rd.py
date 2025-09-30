@@ -8,7 +8,7 @@ val_min = 1
 val_max = 1000
 prob_0 = 0.5
 
-sizes = range(n_min, n_max + 1)
+sizes = [20]# range(n_min, n_max + 1)
 
 
 def RandomMatrix (n, val_min, val_max, prob_0):

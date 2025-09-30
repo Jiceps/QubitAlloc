@@ -3,7 +3,7 @@
 
     #include "utils.hpp"
 
-    int ObjectiveFunction (const vector<int>& map, const vector<vector<int>>& D, const vector<vector<int>>& F, int n);
+    int Objective (const vector<int>& map, const vector<vector<int>>& D, const vector<vector<int>>& F, int n);
 
     bool ValidSolutions (const vector<vector<int>>& op_sols, const vector<vector<int>>& D, const vector<vector<int>>& F, int n, int min_cost);
 

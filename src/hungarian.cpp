@@ -14,14 +14,12 @@ bool ckmin(int &a, const int &b)
  * Hungarian algorithm implementation that modifies the input cost matrix and returns
  * the optimal assignment cost, while modifying the permutation vector.
  *
- * @param C A reference to a matrix of dimensions n×n such that C[w][j] is the cost
+ * @param L A reference to a matrix of dimensions n×n such that L[w][j] is the cost
  *          of assigning the w-th worker to the j-th job (possibly negative).
- * @param i0 row index of the cost sub-matrix C
- * @param j0 column index of the cost sub-matrix C
- * @param n size of the input cost matrix C
+ * @param n size of the input cost matrix L
  * @return The minimum assignment cost.
  */
-int Hungarian (int* C, int i0, int j0, int n)
+int Hungarian (const vector<int>& L, int n)
 {
     int w, j, w_cur, j_cur, j_next;
 
@@ -55,8 +53,8 @@ int Hungarian (int* C, int i0, int j0, int n)
             {
                 if (!in_Z[j])
                 {
-                    // reduced cost = C[w][j] - yw[w] - yj[j]
-                    int cur_cost = C[idx4D(i0, j0, w, j, n)] - yw[w] - yj[j];
+                    // reduced cost = L[w][j] - yw[w] - yj[j]
+                    int cur_cost = L[w*n + j] - yw[w] - yj[j];
 
                     if (ckmin(min_to[j], cur_cost))
                         prv[j] = j_cur;
@@ -97,21 +95,7 @@ int Hungarian (int* C, int i0, int j0, int n)
     for (j = 0; j < n; ++j)
     {
         if (job[j] != -1)
-            total_cost += C[idx4D(i0, j0, job[j], j, n)];
-    }
-
-    // OPTIONAL: Reflecting the "reduced costs" after the Hungarian
-    // algorithm by applying the final potentials:
-    for (w = 0; w < n; ++w)
-    {
-        for (j = 0; j < n; ++j)
-        {
-            if (C[idx4D(i0, j0, w, j, n)] < inf)
-            {
-                // subtract the final potentials from the original cost
-                C[idx4D(i0, j0, w, j, n)] = C[idx4D(i0, j0, w, j, n)] - yw[w] - yj[j];
-            }
-        }
+            total_cost += L[job[j]*n + j];
     }
 
     return total_cost;
