@@ -33,8 +33,8 @@
 
             int bound_GLB (const vector<vector<int>>& D,  const vector<vector<int>>& F, int n, int m);
 
-            // partial_perm: -1 indicates unassigned, otherwise the location assigned
-            vector<int> Assemble_LAP(const vector<vector<int>>& D, const vector<vector<int>>& F, int n, int m);
+            vector<int> Assemble_LAP (const vector<vector<int>>& D, const vector<vector<int>>& F, int n, int m);
+            vector<int> Assemble_LAP_opt (const vector<vector<int>>& D, const vector<vector<int>>& F, int n, int m);
 
             vector<Node> decompose (const vector<int>& priority, int n, int m);
 
