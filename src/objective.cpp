@@ -1,10 +1,7 @@
 #include "../include/objective.hpp"
 
 
-int Objective(const vector<int>& mapping,
-              const vector<vector<int>>& D,
-              const vector<vector<int>>& F,
-              int n)
+int Objective(const vector<int>& mapping, const vector<vector<int>>& D, const vector<vector<int>>& F, int n)
 {
     int cost = 0;
     for (int i = 0; i < n; ++i)

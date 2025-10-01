@@ -139,6 +139,7 @@ vector<int> Node::Assemble_LAP_opt (const vector<vector<int>>& D, const vector<v
 {
     vector<int> partial_mapping = this->mapping;
     vector<bool> av = this->available;
+    int dp = this->depth;
 
     // Identify assigned and unassigned facilities/locations
     vector<int> assigned_fac, unassigned_fac;
@@ -164,10 +165,11 @@ vector<int> Node::Assemble_LAP_opt (const vector<vector<int>>& D, const vector<v
     int r = (int) unassigned_loc.size(); // number of available locations (columns)
 
     assert(u > 0 && r >= u && "Error: Bounding failure.");
+    assert(u == n - dp && r == m - dp && "Error: Bounding failure.");
 
     vector<int> L(u*r, 0);
 
-    // === Precompute for each location the two smallest distances to other locations ===
+    // Precompute for each location the two smallest distances to other locations
     struct MinPair { int min1, idx1, min2; };
     vector<MinPair> best(r);
 
@@ -198,7 +200,7 @@ vector<int> Node::Assemble_LAP_opt (const vector<vector<int>>& D, const vector<v
         best[k_idx] = {min1, idx1, min2};
     }
 
-    // === Build reduced L-matrix ===
+    // Build reduced L-matrix
     for (int i_idx = 0; i_idx < u; ++i_idx)
     {
         int i = unassigned_fac[i_idx];
@@ -212,7 +214,9 @@ vector<int> Node::Assemble_LAP_opt (const vector<vector<int>>& D, const vector<v
             for (int j_idx = 0; j_idx < u; ++j_idx)
             {
                 int j = unassigned_fac[j_idx];
-                if (i == j) continue;
+
+                if (i == j)
+                    continue;
 
                 // Pick best or second-best distance if best is disallowed
                 int d = (best[k_idx].idx1 == k_idx) ? best[k_idx].min2 : best[k_idx].min1;
@@ -242,7 +246,7 @@ int Node::bound_GLB (const vector<vector<int>>& D, const vector<vector<int>>& F,
     vector<int> partial_mapping = this->mapping;
     int dp = this->depth;
 
-    vector<int> L = Assemble_LAP_opt(D, F, n, m);
+    vector<int> L = this->Assemble_LAP_opt(D, F, n, m);
 
     int fixed_cost = Objective(partial_mapping, D, F, n);
 

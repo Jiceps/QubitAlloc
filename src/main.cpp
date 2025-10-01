@@ -48,15 +48,9 @@ int main (int argc, char** argv)
     vector<int> map0;
     int min_cost = GreedyAllocation(D, F, priority, n, m, map0);
 
-    // TEST //
-    //std::cout << "\ngreedy = " << map0 << std::endl;
-    //std::cout << "cost = " << min_cost << std::endl;
-    //////////
-
     // variables
-    vector<vector<int>> optimal_solutions;
-    int num_visited = 0;
-
+    vector<vector<int>> optimal_solutions = {map0};
+    double num_visited = 0;
 
 
     //----------------------------------- B&B tree exploration -----------------------------------//
@@ -72,7 +66,7 @@ int main (int argc, char** argv)
         Node node = Pool.top();
         Pool.pop();
 
-        ++ num_visited;
+        num_visited += 1;
 
         // leaf node    
         if (node.isLeaf(n))
